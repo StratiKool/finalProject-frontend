@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet">
+    <link href="navbar.css" rel="stylesheet" type="text/css">
+    <link href="index.css" rel="stylesheet" type="text/css">
+    <link href="cards.css" rel="stylesheet" type="text/css">
+    <link href="trackedOrder.css" rel="stylesheet" type="text/css">
+    <title>Home</title>
+</head>
+<body>
+    <!--Navbar Start-->
+    <nav class="navbar">
+        <div class="navdiv">
+            <div class="logo"><a href="index.html">Flower Shop</a></label></div>
+            <ul>
+                <li class="navigation"><a href="trackOrder.html">Track Order</a></li>
+                <li class="navigation"><a href="help.html">Help</a></li>
+                <li class="navigationLog"><a href="login.html">Login</a></li>
+                <li class="navigation"><a href="cart.html">Cart: 0</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!--Navbar End-->
+    <div class="delivery">
+        <h4><b>Delivery: Arrived!</b></h4>
+    </div>
+
+    <div id="tracked"></div>
+
+    <script src="configuration.js"></script>
+    <script>
+            let host = getHost();
+            let id = localStorage.getItem("id");
+            let name = localStorage.getItem("name");
+            let cost = localStorage.getItem("cost");
+            let date = localStorage.getItem("date");
+            let firstname = localStorage.getItem("firstname");
+            let lastname = localStorage.getItem("lastname");
+            let address = localStorage.getItem("address");
+            let city = localStorage.getItem("city");
+            let state = localStorage.getItem("state");
+            let zipcode = localStorage.getItem("zipcode")
+
+            display();
+
+            async function display(){
+                let costTax = cost*2-40;
+                let list = document.getElementById("tracked");
+                list.innerHTML = "";
+                let div = document.createElement("div");
+                    div.className = "buy";
+                    let innerHtml = `
+            
+                        <div class="top">
+                        </div>
+                        <div class="image">
+                            <img src="https://finalproject-yflj.onrender.com/${id}/image" alt="question" style="width:100%">
+                        </div>
+                        <div class="containered">
+                            <label class="left"><h3>${name}</h3></label>
+                            <h3>Delivery Date</h3>
+                            <label>${date}</label>
+                            <h3>Item Pricing</h3>
+                            <label>$${cost}</label>
+                            <h3>Delivery Address</h3>
+                            <div class="detailedNames">
+                            <label>${firstname} ${lastname}</label>
+                            </div>
+                            <label>${address}</label>
+                            <label>${city} ${state} ${zipcode}</label>
+                            <br>
+                            <label> <b>Order Total:</b> ${cost} </label>
+                            <br>
+                            <div>
+                                <button class="loginbtn" onclick="myCart()">PLACE ORDER</button>
+                            </div>
+                        </div>
+                        
+                    
+                            `;
+                        div.innerHTML = innerHtml;
+                        list.appendChild(div);
+            }
+
+            async function myCart(){
+                let message = "";
+                let order = {name: name, cost: cost};
+                let request = {
+                    method:"POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(order)
+                };
+                let response = await fetch(host + "/orders", request);
+                if (response.status == 200){
+                    message = "Order placed successfully!";
+                    location.href="cart.html"
+                }else {
+                    console.log(response);
+                    message = "Order was not placed!";
+                }
+            }
+    </script>
+
+</body>
+</html>
